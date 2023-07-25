@@ -1,17 +1,11 @@
-groups:
- - name: security
-   spec: '["reviewpad-bot", "engineeringalpha", "marcelosousa"]'
- - name: dba
-   spec: '["joinreviewpad", "engineeringgamma"]'
- - name: devops
-   spec: '["reviewpad-bot", "engineeringalpha"]'
-
+extends:
+  - https://github.com/trailblazing-reviewpad/blob/main/reviewpad.yml
 
 dictionaries:
  - name: team-per-filepattern
    spec:
      '**/authentication/**': '"security"'
-#     '**/db/**': '"dba"'
+     '**/db/**': '"dba"'
      '.github/workflows/**': '"devops"' 
 
 workflows:
