@@ -22,8 +22,8 @@ workflows:
           value: $teamName
           in: $dictionary("team-per-filepattern")
           do:
-            - if: $hasFilePattern($filePattern) && !$hasRequiredApprovals(1, $assignTeamReviewer($teamName))
+            - if: $hasFilePattern($filePattern) && !$hasRequiredApprovals(1, $team($teamName))
               then: 
                 - $failCheckStatus($sprintf("One approval is required from team '%s' as one file matching '%s' has been touched", [$teamName, $filePattern]))
                 - if: '!$any($reviewers(), ($reviewer: String => $isElementOf($reviewer, $team($teamName))))'
-                  then: $assignReviewer($assignTeamReviewer($teamName), 1)
+                  then: $assignReviewer($assignTeamReviewer([$teamName]), 1)
