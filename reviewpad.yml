@@ -23,7 +23,7 @@ workflows:
                 value: $seniorMembers
                 in: $dictionary("seniors-per-team")
                 do:
-                  if: $isElementOf($teamName, $teamNameInner)
+                  if: $teamName == $teamNameInner
                   then: $assignReviewer($seniorMembers)
 
   # - name: Approval Policy
