@@ -1,5 +1,5 @@
 extends:
-  - https://github.com/trailblazing-reviewpad/blob/main/reviewpad.yml
+  - https://github.com/trailblazing-reviewpad/.github/blob/main/reviewpad.yml
 
 dictionaries:
  - name: team-per-filepattern
