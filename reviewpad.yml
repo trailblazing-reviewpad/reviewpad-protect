@@ -1,3 +1,12 @@
+groups:
+ - name: security
+   spec: '["reviewpad-bot", "engineeringalpha", "marcelosousa"]'
+ - name: dba
+   spec: '["joinreviewpad", "engineeringgamma"]'
+ - name: devops
+   spec: '["reviewpad-bot", "engineeringalpha"]'
+
+
 dictionaries:
  - name: team-per-filepattern
    spec:
@@ -13,8 +22,8 @@ workflows:
           value: $teamName
           in: $dictionary("team-per-filepattern")
           do:
-            - if: $hasFilePattern($filePattern) && !$hasRequiredApprovals(1, $team($teamName))
+            - if: $hasFilePattern($filePattern) && !$hasRequiredApprovals(1, $group($teamName))
               then: 
                 - $failCheckStatus($sprintf("One approval is required from team '%s' as one file matching '%s' has been touched", [$teamName, $filePattern]))
-                - if: '!$any($reviewers(), ($reviewer: String => $isElementOf($reviewer, $team($teamName))))'
-                  then: $assignReviewer($team($teamName), 1)
+                - if: '!$any($reviewers(), ($reviewer: String => $isElementOf($reviewer, $group($teamName))))'
+                  then: $assignReviewer($group($teamName), 1)
