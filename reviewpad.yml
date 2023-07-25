@@ -1,0 +1,20 @@
+dictionaries:
+ - name: team-per-filepattern
+   spec:
+     '**/authentication/**': '"security"'
+     '**/db/**': '"dba"'
+     '.github/workflows/**': '"devops"' 
+
+workflows:
+  - name: Approval Policy
+    run:
+      - forEach: 
+          key: $filePattern
+          value: $teamName
+          in: $dictionary("team-per-filepattern")
+          do:
+            - if: $hasFilePattern($filePattern) && !$hasRequiredApprovals(1, $team($teamName))
+              then: 
+                - $failCheckStatus($sprintf("One approval is required from team '%s' as one file matching '%s' has been touched", [$teamName, $filePattern]))
+                - if: '!$any($reviewers(), ($reviewer: String => $isElementOf($reviewer, $team($teamName))))'
+                  then: $assignReviewer($team($teamName), 1)
