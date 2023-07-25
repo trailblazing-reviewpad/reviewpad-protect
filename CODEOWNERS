@@ -1,5 +1,0 @@
-* @reviewpad-bot
-**/authentication/** @trailblazing-reviewpad/security
-**/db/**  @trailblazing-reviewpad/dba
-.github/workflows/* @trailblazing-reviewpad/devops
-test/* @trailblazing-reviewpad/testers
