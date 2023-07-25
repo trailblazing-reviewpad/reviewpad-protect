@@ -30,6 +30,16 @@ workflows:
           - $error("No reviewer was assigned")
           - $failCheckStatus("No reviewer was assigned")
 
+  - name: Add block merge label
+    run:
+      - if: $size() > 10
+        then: $addLabel("do-not-merge")
+
+  - name: Block merge on labelling
+    run:
+      - if: $isElementOf("do-not-merge", $labels())
+        then: $failCheckStatus("Do not merge")
+
   # - name: Approval Policy
   #   run:
   #     - forEach: 
