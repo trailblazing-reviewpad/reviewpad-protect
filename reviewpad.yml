@@ -18,6 +18,9 @@ workflows:
           do:
             if: $isElementOf($author(), $teamMembers)
             then: 
+              # Assign senior reviewers
+              # Instead of the following loop, if we great if we could simply do:
+              # $assignReviewer($getValue("seniors-per-team", $teamName))
               forEach:
                 key: $teamNameInner
                 value: $seniorMembers
