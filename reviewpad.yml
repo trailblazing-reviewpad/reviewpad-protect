@@ -26,4 +26,4 @@ workflows:
               then: 
                 - $failCheckStatus($sprintf("One approval is required from team '%s' as one file matching '%s' has been touched", [$teamName, $filePattern]))
                 - if: '!$any($reviewers(), ($reviewer: String => $isElementOf($reviewer, $team($teamName))))'
-                  then: $assignReviewer($assignTeamReviewer([$teamName]), 1)
+                  then: $assignTeamReviewer([$teamName])
