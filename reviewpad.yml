@@ -9,15 +9,32 @@ dictionaries:
      '.github/workflows/**': '"devops"' 
 
 workflows:
-  - name: Approval Policy
+  - name: Assign senior reviewers
     run:
-      - forEach: 
-          key: $filePattern
-          value: $teamName
-          in: $dictionary("team-per-filepattern")
+      - forEach:
+          key: $teamName
+          value: $teamMembers
+          in: $dictionary("teams")
           do:
-            - if: $hasFilePattern($filePattern) && !$hasRequiredApprovals(1, $team($teamName))
-              then: 
-                - $failCheckStatus($sprintf("One approval is required from team '%s' as one file matching '%s' has been touched", [$teamName, $filePattern]))
-                - if: '!$any($reviewers(), ($reviewer: String => $isElementOf($reviewer, $team($teamName))))'
-                  then: $assignTeamReviewer([$teamName])
+            if: $isElementOf($author(), $teamMembers)
+            then: 
+              forEach:
+                key: $teamNameInner
+                value: $seniorMembers
+                in: $dictionary("seniosr-per-team")
+                do:
+                  if: $isElementOf($teamName, $teamNameInner)
+                  then: $assignReviewer($seniorMembers)
+
+  # - name: Approval Policy
+  #   run:
+  #     - forEach: 
+  #         key: $filePattern
+  #         value: $teamName
+  #         in: $dictionary("team-per-filepattern")
+  #         do:
+  #           - if: $hasFilePattern($filePattern) && !$hasRequiredApprovals(1, $team($teamName))
+  #             then: 
+  #               - $failCheckStatus($sprintf("One approval is required from team '%s' as one file matching '%s' has been touched", [$teamName, $filePattern]))
+  #               - if: '!$any($reviewers(), ($reviewer: String => $isElementOf($reviewer, $team($teamName))))'
+  #                 then: $assignTeamReviewer([$teamName])
