@@ -11,7 +11,7 @@ dictionaries:
  - name: team-per-filepattern
    spec:
      '**/authentication/**': '"security"'
-     '**/db/**': '"dba"'
+#     '**/db/**': '"dba"'
      '.github/workflows/**': '"devops"' 
 
 workflows:
