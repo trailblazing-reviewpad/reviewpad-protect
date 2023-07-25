@@ -18,9 +18,6 @@ workflows:
           do:
             - if: $isElementOf($author(), $teamMembers)
               then: 
-                # Assign senior reviewers
-                # Instead of the following loop, if we great if we could simply do:
-                # $assignReviewer($getValue("seniors-per-team", $teamName))
                 forEach:
                   key: $teamNameInner
                   value: $seniorMembers
@@ -28,11 +25,10 @@ workflows:
                   do:
                     if: $teamName == $teamNameInner
                     then: $assignReviewer($seniorMembers)
-            # If no reviewer was assigned, fail the check
-            - if: $length($group("reviewers")) == 0
-              then:
-                - $error("No reviewer was assigned")
-                - $failCheckStatus("No reviewer was assigned")
+      - if: $length($group("reviewers")) == 0
+        then:
+          - $error("No reviewer was assigned")
+          - $failCheckStatus("No reviewer was assigned")
 
   # - name: Approval Policy
   #   run:
