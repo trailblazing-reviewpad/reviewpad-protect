@@ -21,7 +21,7 @@ workflows:
               forEach:
                 key: $teamNameInner
                 value: $seniorMembers
-                in: $dictionary("seniosr-per-team")
+                in: $dictionary("seniors-per-team")
                 do:
                   if: $isElementOf($teamName, $teamNameInner)
                   then: $assignReviewer($seniorMembers)
