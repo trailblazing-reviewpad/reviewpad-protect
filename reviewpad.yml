@@ -8,6 +8,13 @@ dictionaries:
      '**/db/**': '"dba"'
      '.github/workflows/**': '"devops"' 
 
+rules:
+  - name: all-reviewers-approved
+    spec: '$all($append($reviewers(), $requestedReviewers()), ($r: String => $reviewerStatus($r) == "APPROVED"))'
+
+  - name: has-reviewers
+    spec: '$length($append($reviewers(), $requestedReviewers())) > 0'
+
 workflows:
   - name: Approval Policy
     run:
@@ -16,23 +23,23 @@ workflows:
           value: $teamName
           in: $dictionary("team-per-filepattern")
           do:
-            - if: $hasFilePattern($filePattern)
+            - if: '$hasFilePattern($filePattern)'
               then:
-                if: '$all($group("reviewers"), ($r: String => $reviewerStatus($r) == "APPROVED"))'
+                if: '$rule("all-reviewers-approved")'
                 then:
                   if: '!$hasRequiredApprovals(1, $team($teamName))'
                   then: $assignTeamReviewer([$teamName])
 
   - name: Block merge if there are no reviewers
     run:
-      - if: $length($group("reviewers")) == 0
+      - if: '$!rule("has-reviewers")'
         then:
           - $error("No reviewer was assigned")
           - $failCheckStatus("No reviewer was assigned")
 
   - name: Block merge if there are missing approvals
     run:
-      - if: '$any($group("reviewers"), ($r: String => $reviewerStatus($r) != "APPROVED"))'
+      - if: '!$rule("all-reviewers-approved")'
         then:
           - $error("Missing approvals")
           - $failCheckStatus("Missing approvals")
