@@ -1,2 +1,22 @@
 extends:
   - https://github.com/trailblazing-reviewpad/.github/blob/main/reviewpad.yml
+
+dictionaries:
+ - name: team-per-filepattern
+   spec:
+     '**/auth/**': '"security"'
+     '**/db/**': '"dba"'
+     '.github/workflows/**': '"devops"'
+
+workflows:
+  - name: Required final approval based on changes
+    run:
+      - if: '$rule("all-reviewers-approved")'
+        then:
+          forEach:
+            key: $filePattern
+            value: $teamName
+            in: $dictionary("team-per-filepattern")
+            do:
+              if: '$hasFilePattern($filePattern) && !$hasRequiredApprovals(1, $team($teamName))'
+              then: $assignReviewer($team($teamName))
