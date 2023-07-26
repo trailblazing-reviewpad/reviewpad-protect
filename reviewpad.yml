@@ -19,7 +19,7 @@ workflows:
             in: $dictionary("team-per-filepattern")
             do:
               if: '$hasFilePattern($filePattern) && !$hasRequiredApprovals(1, $team($teamName))'
-              then: $assignReviewer($team($teamName))
+              then: $assignReviewer($team($teamName), 1)
 
   - name: Block merge criteria
     run:
