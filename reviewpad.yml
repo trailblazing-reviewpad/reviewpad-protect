@@ -32,7 +32,7 @@ workflows:
 
   - name: Block merge if there are no reviewers
     run:
-      - if: '$!rule("has-reviewers")'
+      - if: '!$rule("has-reviewers")'
         then:
           - $error("No reviewer was assigned")
           - $failCheckStatus("No reviewer was assigned")
