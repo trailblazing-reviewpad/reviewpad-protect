@@ -20,3 +20,15 @@ workflows:
             do:
               if: '$hasFilePattern($filePattern) && !$hasRequiredApprovals(1, $team($teamName))'
               then: $assignReviewer($team($teamName))
+
+  - name: Block merge criteria
+    run:
+      - if: '!$rule("has-reviewers")'
+        then:
+          - $error("No reviewer was assigned")
+          - $failCheckStatus("No reviewer was assigned")
+
+      - if: '!$rule("all-reviewers-approved")'
+        then:
+          - $error("Missing approvals")
+          - $failCheckStatus("Missing approvals")
