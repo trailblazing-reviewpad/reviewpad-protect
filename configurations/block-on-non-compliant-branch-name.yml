@@ -1,0 +1,8 @@
+# This Reviewpad YML defines groups of people, rules and workflows
+# to be used in the GitHub repository
+
+workflows:
+  - name: Block merge on non-compliant branch name
+    run:
+      - if: '!$matchString("(feat|chore|fix|test|hotfix)/.+", $head())'
+        then: $failCheckStatus("The feature branch does not follow the naming convention.")

@@ -38,3 +38,7 @@ have all the checklist items checked.
 
 ---
 
+### [Block on non-compliant branch name](./block-on-non-compliant-branch-name.yml)
+
+This configuration blocks the merge if the pull request is not from a branch 
+with a name that matches the regular expression `(feat|chore|fix|test|hotfix)/.+`.
