@@ -2,9 +2,9 @@
 # to be used in the GitHub repository
 
 workflows:
-  - name: Block merge on checklist
+  - name: Block merge on non-compliant branch name
     run:
-      - if: $contains($extractMarkdownHeadingContent($description(), "Checklist", 2), "- [ ]")
+      - if: '!$matchString("(feat|chore|fix|test|hotfix)/.+", $head())'
         then: 
-          - $error("Some checklist items are not checked.")
-          - $failCheckStatus("Some checklist items are not checked.")
+          - $error("The feature branch does not follow the naming convention.")
+          - $failCheckStatus("The feature branch does not follow the naming convention.")
