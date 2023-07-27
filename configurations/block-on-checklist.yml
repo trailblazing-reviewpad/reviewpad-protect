@@ -5,4 +5,6 @@ workflows:
   - name: Block merge on checklist
     run:
       - if: $contains($extractMarkdownHeadingContent($description(), "Checklist", 2), "- [ ]")
-        then: $failCheckStatus("Some checklist items are not checked.")
+        then: 
+          - $error("Some checklist items are not checked.")
+          - $failCheckStatus("Some checklist items are not checked.")

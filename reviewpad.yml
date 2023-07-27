@@ -1,16 +1,10 @@
 # This Reviewpad YML defines groups of people, rules and workflows
 # to be used in the GitHub repository
 
-labels:
-  code-freeze:
-    description: Pull request cannot be merged
-    color: "#e63946"
-
 workflows:
-  - name: Block merge on labelling
+  - name: Block merge on checklist
     run:
-      - if: $isElementOf("code-freeze", $labels())
+      - if: $contains($extractMarkdownHeadingContent($description(), "Checklist", 2), "- [ ]")
         then: 
-          - $error("Code freeze. All pull request merges are blocked.")
-          - $failCheckStatus("Code freeze. All pull request merges are blocked.")
-
+          - $error("Some checklist items are not checked.")
+          - $failCheckStatus("Some checklist items are not checked.")
