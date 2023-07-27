@@ -1,6 +1,40 @@
-workflows:
-  - name: Block merge on checklist
-    run:
-      - if: '!$matchString("(feat|chore|fix|test|hotfix)/.+", $head())'
-        then: $failCheckStatus("The feature branch does not follow the naming convention.")
+# This Reviewpad YML defines groups of people, rules and workflows
+# to be used in the GitHub repository
 
+dictionaries:
+  - name: seniors-per-team
+    spec:
+      security: '["engineeringalpha"]'
+      dba: '["joinreviewpad"]'
+      devops: '["reviewpad-bot"]'
+      developers: '["reviewpad-bot"]'
+
+rules:
+  - name: all-reviewers-approved
+    spec: '$all($append($reviewers(), $requestedReviewers()), ($r: String => $reviewerStatus($r) == "APPROVED"))'
+
+  - name: has-reviewers
+    spec: '$length($append($reviewers(), $requestedReviewers())) > 0'
+
+workflows:
+  - name: Assign senior reviewers
+    run:
+      - forEach:
+          key: $teamName
+          value: $seniorMembers
+          in: $dictionary("seniors-per-team")
+          do:
+            if: $isElementOf($author(), $team($teamName))
+            then: $assignReviewer($seniorMembers)
+
+  - name: Block merge policy
+    run:
+      - if: '!$rule("has-reviewers")'
+        then:
+          - $error("No reviewer was assigned")
+          - $failCheckStatus("No reviewer was assigned")
+
+      - if: '!$rule("all-reviewers-approved")'
+        then:
+          - $error("Missing approvals")
+          - $failCheckStatus("Missing approvals")
