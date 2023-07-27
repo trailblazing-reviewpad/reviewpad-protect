@@ -6,6 +6,7 @@ It is more powerful than GitHub's native branch protection rules, and it is easi
 
 Some configuration examples are available in the [configurations](./configurations) directory.
 
+
 For more information, please visit [Reviewpad Protect](https://reviewpad.com/protect).
 
 Join our [Discord server](https://reviewpad.com/discord) to discuss more about Reviewpad.
