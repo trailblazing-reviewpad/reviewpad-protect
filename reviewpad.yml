@@ -1,6 +1,6 @@
 workflows:
   - name: Block merge on checklist
     run:
-      - if: $contains($extractMarkdownHeadingContent($description(), "Checklist", 2), "- [ ]")
-        then: $failCheckStatus("Some checklist items are not checked.")
+      - if: '!$matchString("(feat|chore|fix|test|hotfix)/\\w+", $head())'
+        then: $failCheckStatus("The feature branch does not follow the naming convention.")
 

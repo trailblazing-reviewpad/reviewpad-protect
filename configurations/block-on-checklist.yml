@@ -1,0 +1,8 @@
+# This Reviewpad YML defines groups of people, rules and workflows
+# to be used in the GitHub repository
+
+workflows:
+  - name: Block merge on checklist
+    run:
+      - if: $contains($extractMarkdownHeadingContent($description(), "Checklist", 2), "- [ ]")
+        then: $failCheckStatus("Some checklist items are not checked.")

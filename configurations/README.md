@@ -4,7 +4,7 @@ This directory contains Reviewpad configuration files.
 
 ## Configurations
 
-### [Require Approval by Senior Reviewers](./require-approval-from-senior-reviewers.yml)
+### [Require approval by senior reviewers](./require-approval-from-senior-reviewers.yml)
 
 This configuration blocks the merge until a senior reviewer from the author's team approves the pull request.
 
@@ -13,7 +13,7 @@ The dictionary key is the GitHub team name, and the value is a list of GitHub us
 
 ---
 
-### [Require Multiple Approvals In Sequence](./require-multiple-approvals-in-sequence.yml)
+### [Require multiple approvals in sequence](./require-multiple-approvals-in-sequence.yml)
 
 This configuration blocks the merge until a senior reviewer from the author's team approves the pull request.
 
@@ -31,4 +31,10 @@ This label could also be automatically added by other Reviewpad workflows.
 
 ---
 
+### [Block on checklist](./block-on-checklist.yml)
+
+This configuration blocks the merge if the pull request does not
+have all the checklist items checked.
+
+---
 
