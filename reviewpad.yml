@@ -1,34 +1,6 @@
-extends:
-  - https://github.com/trailblazing-reviewpad/.github/blob/main/reviewpad.yml
-
-dictionaries:
- - name: team-per-filepattern
-   spec:
-     '**/auth/**': '"security"'
-     '**/db/**': '"dba"'
-     '.github/workflows/**': '"devops"'
-
 workflows:
-  - name: Required final approval based on changes
+  - name: Block merge on checklist
     run:
-      - if: '$rule("all-reviewers-approved")'
-        then:
-          forEach:
-            key: $filePattern
-            value: $teamName
-            in: $dictionary("team-per-filepattern")
-            do:
-              if: '$hasFilePattern($filePattern) && !$hasRequiredApprovals(1, $team($teamName))'
-              then: $assignReviewer($team($teamName), 1)
+      - if: $contains($extractMarkdownHeadingContent($description(), "Checklist", 2), "- [ ]")
+        then: $failCheckStatus("Some checklist items are not checked.")
 
-  - name: Block merge criteria
-    run:
-      - if: '!$rule("has-reviewers")'
-        then:
-          - $error("No reviewer was assigned")
-          - $failCheckStatus("No reviewer was assigned")
-
-      - if: '!$rule("all-reviewers-approved")'
-        then:
-          - $error("Missing approvals")
-          - $failCheckStatus("Missing approvals")
