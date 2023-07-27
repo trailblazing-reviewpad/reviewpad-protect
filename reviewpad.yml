@@ -1,6 +1,6 @@
 workflows:
   - name: Block merge on checklist
     run:
-      - if: '!$matchString("(feat|chore|fix|test|hotfix)/\\w+", $head())'
+      - if: '!$matchString("(feat|chore|fix|test|hotfix)/.+", $head())'
         then: $failCheckStatus("The feature branch does not follow the naming convention.")
 
