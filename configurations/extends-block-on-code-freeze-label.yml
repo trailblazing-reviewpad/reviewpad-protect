@@ -13,4 +13,6 @@ workflows:
   - name: Block merge on labelling
     run:
       - if: $isElementOf("code-freeze", $labels())
-        then: $failCheckStatus("Code freeze. All pull request merges are blocked.")
+        then: 
+          - $error("Code freeze. All pull request merges are blocked.")
+          - $failCheckStatus("Code freeze. All pull request merges are blocked.")

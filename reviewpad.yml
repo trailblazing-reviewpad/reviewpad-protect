@@ -1,10 +1,18 @@
 # This Reviewpad YML defines groups of people, rules and workflows
 # to be used in the GitHub repository
 
+extends:
+  - https://github.com/trailblazing-reviewpad/.github/blob/main/reviewpad/code-freeze.yml
+
+labels:
+  code-freeze:
+    description: Pull request cannot be merged
+    color: "#e63946"
+
 workflows:
-  - name: Block merge on non-compliant branch name
+  - name: Block merge on labelling
     run:
-      - if: '!$matchString("(feat|chore|fix|test|hotfix)/.+", $head())'
+      - if: $isElementOf("code-freeze", $labels())
         then: 
-          - $error("The feature branch does not follow the naming convention.")
-          - $failCheckStatus("The feature branch does not follow the naming convention.")
+          - $error("Code freeze. All pull request merges are blocked.")
+          - $failCheckStatus("Code freeze. All pull request merges are blocked.")
