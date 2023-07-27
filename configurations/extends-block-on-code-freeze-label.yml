@@ -1,0 +1,16 @@
+# This Reviewpad YML defines groups of people, rules and workflows
+# to be used in the GitHub repository
+
+extends:
+  - https://github.com/trailblazing-reviewpad/.github/blob/main/reviewpad/code-freeze.yml
+
+labels:
+  code-freeze:
+    description: Pull request cannot be merged
+    color: "#e63946"
+
+workflows:
+  - name: Block merge on labelling
+    run:
+      - if: $isElementOf("code-freeze", $labels())
+        then: $failCheckStatus("Code freeze. All pull request merges are blocked.")
