@@ -11,24 +11,24 @@ dictionaries:
 workflows:
   - name: Required final approval based on changes
     run:
-      - if: '$rule("all-reviewers-approved")'
+      - if: $rule("all-reviewers-approved")
         then:
           forEach:
             key: $filePattern
             value: $teamName
             in: $dictionary("team-per-filepattern")
             do:
-              if: '$hasFilePattern($filePattern) && !$hasRequiredApprovals(1, $team($teamName))'
+              if: $hasFilePattern($filePattern) && !$hasRequiredApprovals(1, $team($teamName))
               then: $assignReviewer($team($teamName), 1)
 
   - name: Block merge criteria
     run:
-      - if: '!$rule("has-reviewers")'
+      - if: $rule("has-reviewers") == false
         then:
           - $error("No reviewer was assigned")
           - $failCheckStatus("No reviewer was assigned")
 
-      - if: '!$rule("all-reviewers-approved")'
+      - if: $rule("all-reviewers-approved") == false
         then:
           - $error("Missing approvals")
           - $failCheckStatus("Missing approvals")
