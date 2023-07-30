@@ -1,10 +1,19 @@
 # This Reviewpad YML defines groups of people, rules and workflows
 # to be used in the GitHub repository
 
+groups:
+  - name: trusted-bots
+    spec: '["renovate-bot", "snyk-bot", "dependabot", "engineeringalpha"]'
+
+  - name: mandatory-checks
+    spec: '["build"]'
+
 workflows:
-  - name: Block merge on checklist
+  - name: Require mandatory checks
     run:
-      - if: $contains($extractMarkdownHeadingContent($description(), "Checklist", 2), "- [ ]")
-        then: 
-          - $error("Some checklist items are not checked.")
-          - $failCheckStatus("Some checklist items are not checked.")
+      - if: $isElementOf($author(), $group("trusted-bots"))
+        then:
+          - if: '$all($group("mandatory-checks"), ($check : String => $checkRunConclusion($check) == "success"))'
+            then: $approve("LGTM!")
+            else: $failCheckStatus("Mandatory checks failed")
+
