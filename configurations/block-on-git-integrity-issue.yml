@@ -1,0 +1,21 @@
+workflows:
+  - name: Git Integrity Policy
+    run:
+      - forEach:
+          value: $commitMessage
+          in: $commits()
+          do:
+            - if: $matchString("(fix|feat|docs):.+", $commitMessage) == false
+              then: $failCheckStatus($sprintf("Commit message %s does not comply with convention.", [$commitMessage]))
+
+      - if: $matchString("(fix|feat|docs)/.+", $head()) == false
+        then: $failCheckStatus($sprintf("Branch %s must start either with fix/, feat/ or docs/", [$head()]))
+
+      - if: $matchString("(fix|feat|docs):.+", $title()) == false
+        then: $failCheckStatus($sprintf("Title %s must start either with fix, feat or docs", [$title()]))
+
+      - if: $hasLinearHistory() == false
+        then: $failCheckStatus("Pull Request does not have a linear commit history")
+
+      - if: $description() == ""
+        then: $failCheckStatus("Description is empty")

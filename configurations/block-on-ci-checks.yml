@@ -1,0 +1,15 @@
+groups:
+  - name: trusted-bots
+    spec: '["renovate-bot", "snyk-bot", "dependabot", "engineeringalpha"]'
+
+  - name: mandatory-checks
+    spec: '["build"]'
+
+workflows:
+  - name: Require mandatory checks
+    run:
+      - if: $isElementOf($author(), $group("trusted-bots"))
+        then:
+          - if: '$all($group("mandatory-checks"), ($check : String => $checkRunConclusion($check) == "success"))'
+            then: $approve("LGTM!")
+            else: $failCheckStatus("Mandatory checks failed")
