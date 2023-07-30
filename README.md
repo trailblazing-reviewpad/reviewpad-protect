@@ -4,6 +4,7 @@
 
 It is more powerful than GitHub's native branch protection rules, and it is easier to use than GitHub's native CODEOWNERS file.
 
+
 Some configuration examples are available in the [configurations](./configurations) directory.
 
 For more information, please visit [Reviewpad Protect](https://reviewpad.com/protect).
