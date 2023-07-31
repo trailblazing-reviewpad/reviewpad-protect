@@ -11,7 +11,7 @@ groups:
 workflows:
   - name: Require mandatory checks
     run:
-      - if: $isElementOf($author(), $group("trusted-bots"))
+      - if: $isElementOf($author(), $group("trusted-devs"))
         then:
           - if: '$all($group("mandatory-checks"), ($check : String => $checkRunConclusion($check) == "success"))'
             then: $approve("LGTM!")
