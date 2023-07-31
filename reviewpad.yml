@@ -1,18 +1,19 @@
 # This Reviewpad YML defines groups of people, rules and workflows
 # to be used in the GitHub repository
 
-extends:
-  - https://github.com/trailblazing-reviewpad/.github/blob/main/reviewpad/code-freeze.yml
+groups:
+  - name: trusted-devs
+    spec: '["marcelosousa"]'
 
-labels:
-  code-freeze:
-    description: Pull request cannot be merged
-    color: "#e63946"
+  - name: mandatory-checks
+    spec: '["build"]'
 
 workflows:
-  - name: Block merge on labelling
+  - name: Require mandatory checks
     run:
-      - if: $isElementOf("code-freeze", $labels())
-        then: 
-          - $error("Code freeze. All pull request merges are blocked.")
-          - $failCheckStatus("Code freeze. All pull request merges are blocked.")
+      - if: $isElementOf($author(), $group("trusted-bots"))
+        then:
+          - if: '$all($group("mandatory-checks"), ($check : String => $checkRunConclusion($check) == "success"))'
+            then: $approve("LGTM!")
+            else: $failCheckStatus("Mandatory checks failed")
+
